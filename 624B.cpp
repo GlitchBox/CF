@@ -1,37 +1,24 @@
 #include<bits/stdc++.h>
-
 using namespace std;
 
-typedef struct position{
-  int oldPos;
-  int val;
-}position;
+int a[200], p[200];
 
-int alreadyCovered[110][110];
-int p[200];
-position a[200];
+bool ifSorted(int n, int m){
 
-bool comparePositions(position a, position b){
+  int leftMax = 0;
+  int currentMax = a[0];
 
-  return a.val<b.val;
-}
+  for(int i=1;i<n;i++){
+    if(!p[i-1])
+      leftMax = currentMax;
 
-int bisection(int key, int n){
-  int b = 0;
-  int e = n-1;
+    if(leftMax>a[i])
+      return false;
 
-  while(b<=e){
-    int mid = (b+e)/2;
-
-    if(p[mid]==key)
-      return 1;
-    else if(p[mid]>key)
-      e = mid - 1;
-    else
-      b = mid + 1;
+    currentMax = max(a[i],currentMax);
   }
 
-  return -1;
+  return true;
 }
 
 int main(){
@@ -40,64 +27,25 @@ int main(){
   cin>>t;
 
   for(int i=0;i<t;i++){
-      cin>>m>>n;
 
-      for(int j=0;j<m;j++){
-        cin>>temp;
-        a[j] = {j+1, temp};
-      }
+      cin>>n>>m;
       for(int j=0;j<n;j++)
-        cin>>p[j];
+        p[j] = 0;
 
       for(int j=0;j<n;j++){
-        for(int k=0;k<n;k++)
-          alreadyCovered[j][k] = 0;
+        cin>>a[j];
       }
-
-      sort(a, a+m, comparePositions);
-      // cout<<endl;
-      // for(int j=0;j<m;j++)
-      //   cout<<a[j].val<<" "<<a[j].oldPos<<endl;
-      sort(p, p+n);
-
-      //now for every element in the a array, I will check whether its "move area" is covered within the p array
-      int f = 0;
       for(int j=0;j<m;j++){
-        int b,e;
-        if(a[j].oldPos>j+1){
-            b = j+1;
-            e = a[j].oldPos;
-        }
-        else{
-          b = a[j].oldPos;
-          e = j+1;
-        }
-        //cout<<b<<" "<<e<<endl;
-
-
-        int key;
-        for(key=b;key<e;key++){
-          int ret = bisection(key, n);
-          //cout<<"key: "<<key<<"ret: "<<ret<<endl;
-          if(ret==-1){
-              break;
-          }
-        }
-
-        if(key<e){
-            cout<<"NO"<<endl;
-            f = 1;
-            break;
-        }
-
-
+        cin>>temp;
+        p[temp-1]=1;
       }
-      if(!f)
-        cout<<"YES"<<endl;
 
-
+     bool ret = ifSorted(n,m);
+     if(ret)
+      cout<<"YES"<<endl;
+    else
+      cout<<"NO"<<endl; 
 
   }
-
 
 }
